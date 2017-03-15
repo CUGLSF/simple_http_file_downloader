@@ -1,0 +1,37 @@
+2017-02-07 00:58:10 line: 465, func: et, buf: GET /home.html HTTP/1.1
+Host: 192.168.80.128:8000
+Connection: keep-alive
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 YaBrowser/17.1.1.1004 Yowser/2.5 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Accept-Encoding: gzip, deflate, sdch
+Accept-Language: zh,zh-CN;q=0.8,zh-TW;q=0.6,en;q=0.4,fr-FR;q=0.2,fr;q=0.2
+
+
+
+2017-02-07 00:58:10 line: 338, func: handle_request, handle_cmd:      GET
+
+2017-02-07 00:58:10 line: 339, func: handle_request,  file_path:      ../docroot/home.html
+
+2017-02-07 00:58:10 line: 283, func: send_file, sending file!
+
+2017-02-07 00:59:07 line: 465, func: et, buf: 
+
+2017-02-07 00:59:07 line: 465, func: et, buf: GET /books.jpg HTTP/1.1
+Host: 192.168.80.128:8000
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 YaBrowser/17.1.1.1004 Yowser/2.5 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Accept-Encoding: gzip, deflate, sdch
+Accept-Language: zh,zh-CN;q=0.8,zh-TW;q=0.6,en;q=0.4,fr-FR;q=0.2,fr;q=0.2
+
+
+
+2017-02-07 00:59:07 line: 338, func: handle_request, handle_cmd:      GET
+
+2017-02-07 00:59:07 line: 339, func: handle_request,  file_path:      ../docroot/books.jpg
+
+2017-02-07 00:59:07 line: 283, func: send_file, sending file!
+
