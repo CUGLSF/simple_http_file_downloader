@@ -31,6 +31,11 @@ ab -n 100 -c 10 -p adcfg.json -T 'text/plain' http://192.168.80.128:8000/
 在浏览器中按照如下格式输入进行测试:  
 GET 请求:  
 http://192.168.80.128/670.jpg   
-http://192.168.80.128:8000/books.jpg     
+http://192.168.80.128:8000/books.jpg 
 
-目前，对于代码的修改正在进行中。  
+# TODO 
+- threadpool 支持  
+- 简化代码  
+- 完善日志功能
+- CGI支持  
+- 其它HTTP Method
