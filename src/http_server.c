@@ -1,9 +1,4 @@
-﻿/**************************************************
- 该程序通过标准socket实现简单Http服务器
- 运行该服务器可以通过浏览器访问服务器目录下的
- Html文件和jpg图片 完成初步的Http服务器功能
-***************************************************/
-#include <unistd.h>
+﻿#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -75,29 +70,29 @@ void load_config(char *server_ip, int *server_port, char *store_path)
 			i++;
 		line[i] = '\0';
         	switch(line_num)
-        	{
-		case 1:
-		    strcpy(server_ip, get_options_value(server_ip, line));
-		    line_num++;
-		    break;
-		case 2:
-		    temp_str1 = strchr(line, '=');
-		    strcpy(temp_str2, temp_str1 + 2);
-		    sscanf(temp_str2, "%d", server_port);
-		    line_num++;
-		    break;
-		case 3:
-		    strcpy(store_path, get_options_value(store_path, line));
-		    line_num++;
-		    break;
+		{
+			case 1:
+				strcpy(server_ip, get_options_value(server_ip, line));
+		       		line_num++;
+				break;
+			case 2:
+				temp_str1 = strchr(line, '=');
+		                strcpy(temp_str2, temp_str1 + 2);
+		     		sscanf(temp_str2, "%d", server_port);
+		                line_num++;
+				break;
+			case 3:
+				strcpy(store_path, get_options_value(store_path, line));
+		                line_num++;
+		                break;
 
-		case 4:
-		    strcpy(log_path, get_options_value(log_path, line));
-		    break;
+		        case 4:
+				strcpy(log_path, get_options_value(log_path, line));
+		                break;
 		}
 		memset(line, 0, sizeof(line)); // 每次都要进行初始化
     	}
-   	 fclose(fp);
+	fclose(fp);
 }
 // 打印日志信息到指定文件中
 void LOG(const char* ms, ... )
@@ -132,13 +127,13 @@ void LOG(const char* ms, ... )
 	FILE* file = fopen(log_file_path,"a+");
 	if (file == NULL) 
 	{
-	    perror("can't open the log file!\n");
+	        perror("can't open the log file!\n");
 		return;
 	}
 	fwrite(buffer, 1, strlen(buffer), file);
 	fclose(file);
 	
-	return ;
+	return; 
 }
 int sendall(int sock, char *buf, int *len)
 {
@@ -210,7 +205,7 @@ void file_not_found(char* file_path, int sock)
 {
 	char* error_head = "HTTP/1.0 404 Not Found\r\n";    // 构造404错误head
     	int len = strlen(error_head);
-    	if (sendall(sock, error_head, &len) == -1)          // 向客户端发送
+    	if (sendall(sock, error_head, &len) == -1)      // 向客户端发送
     	{
         	LOG("line: %d, func: %s, sending error!\n", __LINE__, __FUNCTION__);
         	return;
@@ -244,7 +239,7 @@ void file_not_found(char* file_path, int sock)
 void send_header(int send_to, char* content_type)
 {
 	char* head = "HTTP/1.0 200 OK\r\n";     // 正确的头部信息
-    	int len = strlen(head);
+	int len = strlen(head);
     	if (sendall(send_to, head, &len) == -1) // 向连接的客户端发送数据
     	{
         	LOG("line: %d, func: %s, sending error!\n", __LINE__, __FUNCTION__);
@@ -266,55 +261,60 @@ void send_header(int send_to, char* content_type)
 
 char* get_file_type(char* arg)
 {
-    char * temp = NULL;                         // 临时字符串指针
-    // strrchr 查找字符在字符数组中最后一次出现的位置
-    if ((temp = strrchr(arg, '.')) != NULL)     // 取得后缀
-    {
-        return temp + 1;
-    }
-    return "";                                  // 如果请求的文件名中没有. 则返回空串
+	char * temp = NULL;                         // 临时字符串指针
+   
+	// strrchr 查找字符在字符数组中最后一次出现的位置
+   
+	if ((temp = strrchr(arg, '.')) != NULL)     // 取得后缀
+   
+	{
+      
+		return temp + 1;
+   
+	}
+   
+	return "";                                  // 如果请求的文件名中没有. 则返回空串
 }
 void send_file(char* file_path, int sock, int file_size)
 {
-    int srcfd;
-    char* extension = get_file_type(file_path); // 获得文件后缀名
-    char* content_type = "application/octet-stream";
-    char read_buf[2*FILE_NAME_MAX_SIZE] = {0};  // 读文件时的字节缓存数组
+	int srcfd;
+        char* extension = get_file_type(file_path); // 获得文件后缀名
+        char* content_type = "application/octet-stream";
+        char read_buf[2*FILE_NAME_MAX_SIZE] = {0};  // 读文件时的字节缓存数组
 
-    LOG("line: %d, func: %s, sending file!\n", __LINE__, __FUNCTION__);
-    if (strcmp(extension, "html") == 0)         // 发送内容为html
-    {
-        content_type = "text/html";
-    }
+        LOG("line: %d, func: %s, sending file!\n", __LINE__, __FUNCTION__);
+        if (strcmp(extension, "html") == 0)         // 发送内容为html
+        {
+		content_type = "text/html";
+        }
+	if (strcmp(extension, "gif") == 0)          // 发送内容为gif
+        {
+		content_type = "image/gif";
+	}
 
-    if (strcmp(extension, "gif") == 0)          // 发送内容为gif
-    {
-        content_type = "image/gif";
-    }
-
-    if (strcmp(extension, "jpg") == 0)         // 发送内容为jpg
-    {
-        content_type = "image/jpg";
-    }
-    send_header(sock, content_type);
+        if (strcmp(extension, "jpg") == 0)         // 发送内容为jpg
+        {
+        	content_type = "image/jpg";
+    	}
+    	send_header(sock, content_type);
     
-    if ((srcfd = open(file_path, O_RDONLY, 0)) < 0)
-    {
-	LOG("line: %d, func: %s, open file %s error\n", __LINE__, __FUNCTION__, file_path);
-	return;
-    }
+    	if ((srcfd = open(file_path, O_RDONLY, 0)) < 0)
+        {
+		LOG("line: %d, func: %s, open file %s error\n", __LINE__, __FUNCTION__, file_path);
+		return;
+    	}
 	
-    memset(read_buf, 0, sizeof (read_buf));
-    sprintf(read_buf, "Content-Length: %d\r\n", file_size);
-    int tmp_len = strlen(read_buf);
-    if (sendall(sock, read_buf, &tmp_len) == -1)
-    {
-        LOG("line: %d, func: %s, sending error!\n", __LINE__, __FUNCTION__);
-        return;
-    }
-    send(sock, "\r\n", 2, 0);                 // 再加一个"\r\n" 不能缺少
+    	memset(read_buf, 0, sizeof (read_buf));
+    	sprintf(read_buf, "Content-Length: %d\r\n", file_size);
+    	int tmp_len = strlen(read_buf);
+    	if (sendall(sock, read_buf, &tmp_len) == -1)
+    	{
+        	LOG("line: %d, func: %s, sending error!\n", __LINE__, __FUNCTION__);
+        	return;
+    	}
+    	send(sock, "\r\n", 2, 0);                 // 再加一个"\r\n" 不能缺少
 	
-    sendfile(sock, srcfd, NULL, file_size);   // 零拷贝	
+    	sendfile(sock, srcfd, NULL, file_size);   // 零拷贝	
 }
 
 void * handle_request(void * my_arg)
@@ -332,7 +332,7 @@ void * handle_request(void * my_arg)
 	if (sscanf(ptr_arg->buf, "%s /%s", method, file_path + strlen(file_path)) != 2)
 	{
 		close(ptr_arg->sock_fd);
-		return;                              // 解析出错返回
+		return NULL;                              // 解析出错返回
 	}
 	LOG("line: %d, func: %s, handle_cmd:      %s\n", __LINE__, __FUNCTION__, method);
 	LOG("line: %d, func: %s,  file_path:      %s\n", __LINE__, __FUNCTION__, file_path);
@@ -341,7 +341,7 @@ void * handle_request(void * my_arg)
 	{
 		wrong_req(ptr_arg->sock_fd);
 		close(ptr_arg->sock_fd);
-		return;
+		return NULL;
 	}
 	int file_size = 0;
 	if ((file_size = not_exist(file_path)) < 0) // 请求的文件是否存在
@@ -349,14 +349,14 @@ void * handle_request(void * my_arg)
 		LOG("line: %d, func: %s, file %s not exist!\n", __LINE__, __FUNCTION__, file_path);
 		file_not_found(file_path, ptr_arg->sock_fd);
 		close(ptr_arg->sock_fd);
-		return;
+		return NULL;
 	}
 	
 	send_file(file_path, ptr_arg->sock_fd, file_size);
 
 	close(ptr_arg->sock_fd);
 
-	return;
+	return NULL;
 }
 
 int make_listenfd(char *server_ip, int server_port)
